@@ -1,0 +1,11 @@
+[run]
+branch = True
+source = app
+omit = 
+    tests/*
+    *__init__.py
+    *main.py
+
+
+[report]
+show_missing = True

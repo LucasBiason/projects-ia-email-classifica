@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  test:
+    container_name: projects-ia-email-classifica-test
+    build: .
+    command: test
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - PYTHONPATH=/app
+    env_file:
+      - .env
+    network_mode: host
+
+  web:
+    container_name: projects-ia-email-classifica
+    build: .
+    command: runserver
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - PYTHONPATH=/app
+    env_file:
+      - .env
+    network_mode: host
