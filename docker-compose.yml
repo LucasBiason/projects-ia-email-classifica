@@ -8,9 +8,6 @@ services:
     command: test
     volumes:
       - .:/app
-    environment:
-      - FLASK_ENV=development
-      - PYTHONPATH=/app
     env_file:
       - .env
     network_mode: host
@@ -21,9 +18,6 @@ services:
     command: runserver
     volumes:
       - .:/app
-    environment:
-      - FLASK_ENV=development
-      - PYTHONPATH=/app
     env_file:
       - .env
     network_mode: host
