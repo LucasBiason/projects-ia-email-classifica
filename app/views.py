@@ -12,7 +12,6 @@ with proper HTTP status codes and error messages.
 
 from fastapi import APIRouter, HTTPException
 
-from .email_classifier import EmailClassifier
 from .schemas import Message, PredictionResponse
 
 router = APIRouter()

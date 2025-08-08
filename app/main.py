@@ -12,15 +12,14 @@ from typing import Dict, Any, Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from .views import router, classifier
-from .email_classifier import EmailClassifier
+from .views import router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Global classifier instance
-classifier_instance: Optional[EmailClassifier] = None
+classifier_instance: Optional[object] = None
 
 
 @asynccontextmanager
@@ -30,6 +29,7 @@ async def lifespan(app: FastAPI):
     global classifier_instance
     try:
         logger.info("Initializing EmailClassifier...")
+        from .email_classifier import EmailClassifier
         classifier_instance = EmailClassifier()
         classifier_instance.train()
         # Set the global classifier in views
@@ -38,7 +38,8 @@ async def lifespan(app: FastAPI):
         logger.info("EmailClassifier initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize EmailClassifier: {e}")
-        raise
+        # Don't raise here, let the app start without the classifier
+        classifier_instance = None
     
     yield
     

@@ -17,9 +17,6 @@ Commands:
 
 case "$1" in
   test)
-    poetry run python -m pytest tests/ -v
-    ;;
-  test-with-coverage)
     poetry run coverage run -m pytest --cov=app --cov-report term-missing --cov-config=.coveragerc tests/ -s -vv
     ;;
   runserver)
