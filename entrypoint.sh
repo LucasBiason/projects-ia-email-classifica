@@ -17,10 +17,13 @@ Commands:
 
 case "$1" in
   test)
-    pytest --cov=app --cov-report term-missing --cov-config=.coveragerc tests/ -s -vv
+    poetry run python -m pytest tests/ -v
+    ;;
+  test-with-coverage)
+    poetry run coverage run -m pytest --cov=app --cov-report term-missing --cov-config=.coveragerc tests/ -s -vv
     ;;
   runserver)
-    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ;;
   *)
     cli_help

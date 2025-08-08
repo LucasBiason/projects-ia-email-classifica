@@ -3,21 +3,20 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --upgrade pip setuptools wheel
-RUN pip install -r requirements.txt
+COPY pyproject.toml poetry.lock ./
+RUN apt-get update && apt-get install -y gcc libpq-dev
+RUN pip install poetry
+RUN poetry install
 
 COPY . .
 
-RUN chmod +x /app/entrypoint.sh
+RUN chmod -R 777 /app
 
 EXPOSE 8000
 
-CMD ["/app/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

@@ -17,8 +17,8 @@ from .schemas import Message, PredictionResponse
 
 router = APIRouter()
 
-# Global classifier instance
-classifier = EmailClassifier()
+# Global classifier instance - will be initialized in main.py
+classifier = None
 
 
 @router.post("/predict", response_model=PredictionResponse)
@@ -49,9 +49,14 @@ def predict(message: Message) -> PredictionResponse:
         Email classified as: spam
     """
     try:
+        if classifier is None:
+            raise HTTPException(status_code=503, detail="Classifier not ready")
+        
         prediction: int = classifier.predict(message.message)
         return PredictionResponse(
             prediction="spam" if prediction == 1 else "ham"
         )
     except FileNotFoundError as e:
         raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
